@@ -62,11 +62,24 @@ extension Card: CustomStringConvertible {
 extension Array where Element: PlayingCard {
     
     mutating func sortCards() {
-        // TODO: Use the sorted function to properly sort how the cards should line up within self (self being an instance of an Array). A call to the sorted function will return back to you a new Array. You should assign what is returned to you by sorted to self.
+        self = self.sorted(by: { (card1, card2) -> Bool in
+            var card1Value = card1.rank.value
+            var card2Value = card2.rank.value
+            if let a = Suit.all.index(of: card1.suit) { card1Value += (a * 100) }
+            if let b = Suit.all.index(of: card2.suit) { card2Value += (b * 100) }
+            return card1Value > card2Value
+        })
+        print(self)
     }
     
     mutating func shuffle() {
         self = GKRandomSource().arrayByShufflingObjects(in: self) as! Array<Iterator.Element>
+    }
+    
+   func getScore() -> Int {
+        var total: Int = 0
+        self.forEach({total +=  $0.rank.value})
+        return total
     }
     
 }
